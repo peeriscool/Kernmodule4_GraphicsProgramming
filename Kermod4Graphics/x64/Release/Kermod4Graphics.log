@@ -1,0 +1,8 @@
+﻿  glad.c
+  Main.cpp
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(36,21): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 34 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Kermod4Graphics.vcxproj -> C:\OpenGlProject\Kermod4Graphics\x64\Release\Kermod4Graphics.exe

@@ -1,11 +1,18 @@
 # Prerequisites
 *.d
+/.vs
 
 # Compiled Object files
 *.slo
 *.lo
 *.o
 *.obj
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # Precompiled Headers
 *.gch
@@ -30,3 +37,4 @@
 *.exe
 *.out
 *.app
+*.vsidx
