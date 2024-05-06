@@ -6,8 +6,9 @@
 //forward declaration
 void processInput(GLFWwindow* window);
 int init(GLFWwindow* &window);
-void createTriangle(GLuint &vao, int &size);
 void createShaders();
+void createTriangle(GLuint &VAO,GLuint& EBO, int& size, int& numIndices);
+
 void createProgram(GLuint& program, const char* vertex, const char* fragment);
 
 //Util
@@ -23,10 +24,9 @@ int main()
 	int res = init(window);
 	if (res != 0) return res;
 
-	GLuint TriangleVAO;
-	int TriangleSize;
-
-	createTriangle(TriangleVAO, TriangleSize);
+	GLuint triangleVAO, triangleEBO;
+	int triangleSize, triangleIndexCount;
+	createTriangle(triangleVAO, triangleEBO, triangleSize, triangleIndexCount);
 	createShaders();
 
 	//Create viewport
@@ -40,10 +40,10 @@ int main()
 		//rendering
 		glClearColor(0.5f, 0.7f, 0.3f, 1.0f); //set background
 		glClear(GL_COLOR_BUFFER_BIT);
-		
-		glBindVertexArray(TriangleVAO);
-		glDrawArrays(GL_TRIANGLES,0, TriangleSize);
 		glUseProgram(simpleProgram);
+		glBindVertexArray(triangleVAO);
+		//glDrawArrays(GL_TRIANGLES,0, triangleSize);
+		glDrawElements(GL_TRIANGLES, triangleIndexCount, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		//event poll
 		glfwPollEvents();
@@ -86,28 +86,45 @@ int init(GLFWwindow* &window)
 	}
 	return 0;
 }
-void createTriangle(GLuint& vao, int& size)
+void createTriangle(GLuint &VAO, GLuint &EBO, int &size, int& numIndices)
 {
 	float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f
+		//position			//color					//index 
+	-0.5f, -0.5f, 0.0f,		1.0f,0.0f,0.0f,1.0f,	//0 
+	 0.5f, -0.5f, 0.0f,		0.0f,1.0f,0.0f,1.0f,	//1
+	-0.5f,  0.5f, 0.0f,		0.0f,0.0f,1.0f,1.0f,	//2
+	 0.5f,  0.5f, 0.0f,		1.0f,1.0f,1.0f,1.0f		//3
 	};
+
+	int indices[] = {
+		0,1,2,
+		2,1,3
+	};
+	int stride = (3 + 4) * sizeof(float);
+
+	size = sizeof(vertices) / stride;
+	numIndices = sizeof(indices)/sizeof(int);
 	//vertex array
 	//GLuint VAO;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
 
 	//vertex buffer
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER,VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3 * sizeof(float),(void*)0);
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,stride, (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, stride, (void*)(3* sizeof(float)));
+	glEnableVertexAttribArray(1);
 	
-	size = sizeof(vertices);
 }
 void createShaders()
 {
@@ -128,23 +145,24 @@ void createProgram(GLuint& programID, const char* vertex, const char* fragment)
 
 	int success;
 	char infologbuffer[512];
-	
+	//check compile status of vertex
 	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
 		glGetShaderInfoLog(vertexShaderID, 512, nullptr, infologbuffer);
-		std::cout << "Error at vertexShader\n" << infologbuffer << std::endl;
+		std::cout << "Error during vertexShader compilation\n" << infologbuffer << std::endl;
 	}
 
 	fragmentShadeID = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShadeID, 1, &FragSrc, nullptr);
 	glCompileShader(fragmentShadeID);
 
+	//check compile status of fragment
 	glGetShaderiv(fragmentShadeID, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
 		glGetShaderInfoLog(fragmentShadeID, 512, nullptr, infologbuffer);
-		std::cout << "Error at FragmentShader\n" << infologbuffer << std::endl;
+		std::cout << "Error during FragmentShader compilation\n" << infologbuffer << std::endl;
 
 	}
 	programID = glCreateProgram();
