@@ -61,7 +61,10 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(simpleProgram,"world"),1,GL_FALSE,glm::value_ptr(world));
 		glUniformMatrix4fv(glGetUniformLocation(simpleProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(simpleProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
+		
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, boxTex); //id gets matched with channel of texture using shader program
+		 
 		glBindVertexArray(triangleVAO);
 		//glDrawArrays(GL_TRIANGLES,0, triangleSize);
 		glDrawElements(GL_TRIANGLES, triangleIndexCount, GL_UNSIGNED_INT, 0);

@@ -7,6 +7,6 @@ uniform sampler2D diffuse;
 
 void main()
 {
-	FragColor = vec4(uv,0.0f,1.0f);//vec4(1.0f,0.5f,0.2f,1.0f);
-	//vec4 (color,1f)* texture( diffuse,uv);
+	FragColor = vec4 (color,1.0f) * texture(diffuse,uv);//vec4(1.0f,0.5f,0.2f,1.0f);
+	//vec4(uv,0.0f,1.0f);
 }
