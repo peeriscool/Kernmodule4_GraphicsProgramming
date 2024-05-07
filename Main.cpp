@@ -46,8 +46,8 @@ int main()
 
 	glm::mat4 view = glm::lookAt(glm::vec3(0, 2.5f, -5.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)); //view /camera 
 
-	glm::mat4 projection = glm::perspective(45.0f, WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-
+	glm::mat4 projection = glm::perspective(glm::radians(35.f), WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+	glm::vec3 lightPosition = glm::vec3(3,3,1);
 	//game render loop
 	while(!glfwWindowShouldClose(window))
 	{
@@ -61,7 +61,7 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(simpleProgram,"world"),1,GL_FALSE,glm::value_ptr(world));
 		glUniformMatrix4fv(glGetUniformLocation(simpleProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(simpleProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		
+		glUniform3fv(glGetUniformLocation(simpleProgram,"lightPosition"),1,glm::value_ptr(lightPosition));
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, boxTex); //id gets matched with channel of texture using shader program
 		 
@@ -198,6 +198,9 @@ void createGeometry(GLuint &VAO, GLuint &EBO, int &size, int& numIndices)
 	//uv
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+	//normals
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_TRUE, stride, (void*)(8 * sizeof(float)));
+	glEnableVertexAttribArray(3);
 }
 void createShaders()
 {
