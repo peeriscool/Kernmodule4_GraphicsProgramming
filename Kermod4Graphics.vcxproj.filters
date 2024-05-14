@@ -32,6 +32,18 @@
     <None Include="Shaders\SimpleVertex.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="Shaders\skyFragment.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="Shaders\skyVertex.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="Shaders\terrainFragment.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="Shaders\terrainVertex.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">

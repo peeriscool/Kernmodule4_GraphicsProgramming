@@ -1,3 +1,4 @@
 ﻿  Main.cpp
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(321,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(412,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(495,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Kermod4Graphics.vcxproj -> C:\OpenGlProject\Kermod4Graphics\x64\Debug\Kermod4Graphics.exe
