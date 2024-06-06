@@ -1,7 +1,6 @@
-﻿  glad.c
-  Main.cpp
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(115,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(440,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+﻿  Main.cpp
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(116,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(447,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
   Kermod4Graphics.vcxproj -> C:\OpenGlProject\Kermod4Graphics\x64\Debug\Kermod4Graphics.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
@@ -13,6 +12,8 @@ C:\OpenGlProject\Kermod4Graphics\Main.cpp(440,14): warning C4244: 'initializing'
   C:\OpenGlProject\Kermod4Graphics\\resources\models\backpack\roughness.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\models\backpack\source_attribution.txt
   C:\OpenGlProject\Kermod4Graphics\\resources\models\backpack\specular.jpg
+  C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Ufo.mtl
+  C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Ufo.obj
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\model.fs
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\model.vs
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\SimpleFragment.shader
@@ -21,6 +22,8 @@ C:\OpenGlProject\Kermod4Graphics\Main.cpp(440,14): warning C4244: 'initializing'
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\skyVertex.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\terrainFragment.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\terrainVertex.shader
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\UfoFragment.shader
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\UfoVertex.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\container2.png
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\container2_Normal.png
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\dirt.jpg
@@ -35,4 +38,4 @@ C:\OpenGlProject\Kermod4Graphics\Main.cpp(440,14): warning C4244: 'initializing'
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\day.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\night.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\space-cubemap.zip
-  30 File(s) copied
+  34 File(s) copied

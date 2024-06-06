@@ -24,30 +24,39 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MTLHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\SimpleFragment.shader">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
-    <None Include="Shaders\SimpleVertex.shader">
-      <Filter>Resource Files\shaders</Filter>
-    </None>
     <None Include="Shaders\skyFragment.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
     <None Include="Shaders\skyVertex.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="Shaders\terrainFragment.shader">
+    <None Include="resources\Shaders\SimpleVertex.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="Shaders\terrainVertex.shader">
+    <None Include="resources\Shaders\SimpleFragment.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="Shaders\model.fs">
+    <None Include="resources\Shaders\UfoFragment.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\Shaders\UfoVertex.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\Shaders\model.fs">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="Shaders\model.vs">
+    <None Include="resources\Shaders\model.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="resources\Shaders\terrainFragment.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="resources\Shaders\terrainVertex.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
@@ -59,6 +68,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MTLHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

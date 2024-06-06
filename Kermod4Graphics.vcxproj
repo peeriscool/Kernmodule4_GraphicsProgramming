@@ -159,20 +159,24 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MTLHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\model.fs" />
-    <None Include="Shaders\model.vs" />
-    <None Include="Shaders\SimpleFragment.shader" />
-    <None Include="Shaders\SimpleVertex.shader" />
+    <None Include="resources\Shaders\model.fs" />
+    <None Include="resources\Shaders\model.vs" />
+    <None Include="resources\Shaders\SimpleFragment.shader" />
+    <None Include="resources\Shaders\SimpleVertex.shader" />
+    <None Include="resources\Shaders\terrainFragment.shader" />
+    <None Include="resources\Shaders\terrainVertex.shader" />
+    <None Include="resources\Shaders\UfoFragment.shader" />
+    <None Include="resources\Shaders\UfoVertex.shader" />
     <None Include="Shaders\skyFragment.shader" />
     <None Include="Shaders\skyVertex.shader" />
-    <None Include="Shaders\terrainFragment.shader" />
-    <None Include="Shaders\terrainVertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="MTLHelper.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
