@@ -1,12 +1,8 @@
 ﻿  Main.cpp
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(137,11): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(473,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(557,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Generating code
-  1 of 882 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    7 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(503,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(587,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+GeoClass.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
   Kermod4Graphics.vcxproj -> C:\OpenGlProject\Kermod4Graphics\x64\Release\Kermod4Graphics.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.
@@ -30,8 +26,15 @@ C:\OpenGlProject\Kermod4Graphics\Main.cpp(557,10): warning C4244: 'initializing'
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Torus.obj
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Ufo.mtl
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Ufo.obj
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\BasicFragment.shader
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\BasicVertex.shader
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\GeoClass.cpp
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\MandelBulbVertex.shader
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\MandelBulpFragment.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\model.fs
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\model.vs
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\ShaderToyFragment.shader
+  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\ShadertoyVertex.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\SimpleFragment.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\SimpleVertex.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\skyFragment.shader
@@ -54,4 +57,4 @@ C:\OpenGlProject\Kermod4Graphics\Main.cpp(557,10): warning C4244: 'initializing'
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\day.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\night.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\space-cubemap.zip
-  44 File(s) copied
+  51 File(s) copied

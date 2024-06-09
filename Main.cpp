@@ -12,7 +12,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+//#include "GeoClass.h"
 #include "MTLHelper.h"
+//int main();
 //forward declaration
 void processInput(GLFWwindow* window);
 void createShaders();
@@ -25,7 +27,8 @@ void renderModel(Model* model, GLuint program);
 void RenderUfo(Model* model, GLuint program, float r, float g, float b, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);
 int init(GLFWwindow*& window);
 unsigned int GeneratePlane(const char* heightmap, unsigned char*& data, GLenum format, int comp, float hScale, float xzScale, unsigned int& indexCount, unsigned int& heightmapID);
-
+//unsigned int GeneratePlane(const char* heightmap, unsigned char*& data, GLenum format, int comp, float hScale, float xzScale, unsigned int& indexCount, unsigned int& heightmapID);
+unsigned int createPlane(GLuint& VAO, GLuint& VBO, GLuint& EBO, int& size, int& numIndices);
 //callbakcs
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void Key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -79,6 +82,8 @@ int main()
 
 	createShaders();
 	createGeometry(GeometryVAO, GeometryEBO, geoSize, geoIndexCount);
+
+	//GeoClass::createSphereGeometry(sphereVAO, SPhereEBO, tempSize, tempNumIndices);
 	terrainVAO = GeneratePlane("resources/textures/Heightmap2.png", heigthMapTexture,GL_RGBA,4,100.0f,5.0f,terrainIndeCount, heightmapID);
 	heightNormalID = loadTexture("resources/textures/heightnormal.png");
 	GLuint boxTex = loadTexture("resources/textures/container2.png");
@@ -99,6 +104,7 @@ int main()
 	detail = new Model("resources/models/Ufo/Details.obj");
 
 	UfoMaterials = loadMTL("resources/models/Ufo/FullUfo.mtl");
+	/*
 	for (const auto& material : UfoMaterials)
 	{
 		std::cout << "Material: " << material.name << std::endl;
@@ -111,14 +117,10 @@ int main()
 		std::cout << "  d: " << material.d << std::endl;
 		std::cout << "  illum: " << material.illum << std::endl;
 	}
-	
+	*/
 	//Create viewport
 	glViewport(0, 0, WIDTH, HEIGHT);
-	
-	//glm::mat4 view = glm::lookAt(cameraPosition, campos, glm::vec3(0, 1, 0)); //view /camera 
 
-	//glm::mat4 projection = glm::perspective(glm::radians(FOV), WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-	
 	//game render loop
 	while(!glfwWindowShouldClose(window))
 	{
@@ -133,31 +135,24 @@ int main()
 		projection = glm::perspective(glm::radians(FOV), WIDTH / (float)HEIGHT, 0.1f, 6000.0f);
 		
 		renderSkybox();
+		glUseProgram(terrainProgram);
+
 		renderTerrain();
-		float t = glfwGetTime();
-		renderModel(backpack,modelProgram,glm::vec3(1000,100,1000), glm::vec3(0, t, 0), glm::vec3(100, 100, 100));
+	//	float t = glfwGetTime();
+	//	renderModel(backpack,modelProgram,glm::vec3(1000,100,1000), glm::vec3(0, t, 0), glm::vec3(100, 100, 100));
 		RenderUfo(Icosphere, UfoProgram, UfoMaterials[1].Kd[0], UfoMaterials[1].Kd[1], UfoMaterials[1].Kd[2], glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); // blueishx
 		RenderUfo(detail, UfoProgram, UfoMaterials[2].Kd[0] * 10, UfoMaterials[2].Kd[1] * 10, UfoMaterials[2].Kd[2] * 10, glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //black
 		RenderUfo(Torus, UfoProgram, UfoMaterials[3].Kd[0], UfoMaterials[3].Kd[1], UfoMaterials[3].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //green
 		RenderUfo(legs, UfoProgram, UfoMaterials[0].Kd[0], UfoMaterials[0].Kd[1], UfoMaterials[0].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //grey
-		
-		renderModel(Torus, simpleProgram, glm::vec3(1500, 150, 1500), glm::vec3(t, t, t), glm::vec3(600, 600, 600));
-		/*
-		glUniformMatrix4fv(glGetUniformLocation(simpleProgram,"world"),1,GL_FALSE,glm::value_ptr(world));
-		glUniformMatrix4fv(glGetUniformLocation(simpleProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(simpleProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		//renderModel(Torus, simpleProgram, glm::vec3(1500, 150, 1500), glm::vec3(t, t, t), glm::vec3(600, 600, 600));
 
-		glUniform3fv(glGetUniformLocation(simpleProgram,"lightPosition"),1,glm::value_ptr(lightPosition)); 
-		glUniform3fv(glGetUniformLocation(simpleProgram, "cameraPosition"), 1, glm::value_ptr(cameraPosition));
-		//FOV
-*/
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, boxTex); //id gets matched with channel of texture using shader program
 		 
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, boxNormal); //id gets matched with channel of texture using shader program
 		
-		
+	
 		glfwSwapBuffers(window);
 		//event poll
 		glfwPollEvents();
@@ -175,7 +170,7 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
 	{
 		//change fov +
-		FOV += 0.01f;
+		FOV += 0.1f;
 		std::cout << "Fov" << FOV << std::endl;
 	}
 	if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
@@ -183,7 +178,7 @@ void processInput(GLFWwindow* window)
 		//change fov -
 		if (FOV > 0)
 		{
-			FOV -= 0.01f;
+			FOV -= 0.1f;
 			std::cout << "Fov" << FOV << std::endl;
 		}
 	}
@@ -277,7 +272,7 @@ int init(GLFWwindow* &window)
 	}
 	return 0;
 }
-void createGeometry(GLuint &VAO, GLuint &EBO, int &size, int& numIndices)
+void createGeometry(GLuint &VAO, GLuint &EBO, int &size, int& numIndices) //creates plane
 {
 	// need 24 vertices for normal/uv-mapped Cube
 	float vertices[] = {
@@ -378,10 +373,10 @@ void createGeometry(GLuint &VAO, GLuint &EBO, int &size, int& numIndices)
 void createShaders()
 {
 	//createProgram(simpleProgram, "Shaders/SimpleVertex.shader", "Shaders/SimpleFragment.shader");
-
-	glUseProgram(simpleProgram);
-	glUniform1i(glGetUniformLocation(simpleProgram, "diffuseTex"), 0);
-	glUniform1i(glGetUniformLocation(simpleProgram, "normalTex"), 1);
+	
+	//glUseProgram(simpleProgram);
+	//glUniform1i(glGetUniformLocation(simpleProgram, "diffuseTex"), 0);
+	//glUniform1i(glGetUniformLocation(simpleProgram, "normalTex"), 1);
 	createProgram(SkyProgram,"resources/Shaders/skyVertex.shader","resources/Shaders/skyFragment.shader");
 
 	createProgram(terrainProgram, "resources/Shaders/terrainVertex.shader", "resources/Shaders/terrainFragment.shader");
@@ -714,7 +709,7 @@ void Key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	
 }
-unsigned int GeneratePlane(const char* heightmap, unsigned char* &data , GLenum format, int comp, float hScale, float xzScale, unsigned int& indexCount, unsigned int& heightmapID)
+unsigned int GeneratePlane(const char* heightmap, unsigned char*& data, GLenum format, int comp, float hScale, float xzScale, unsigned int& indexCount, unsigned int& heightmapID)
 {
 	int width, height, channels;
 	data = nullptr;
@@ -743,21 +738,21 @@ unsigned int GeneratePlane(const char* heightmap, unsigned char* &data , GLenum 
 		int x = i % width;
 		int z = i / width;
 
-		float texHeight = (float) data[(z * width + x) * comp];
+		float texHeight = (float)data[(z * width + x) * comp];
 		// TODO: set position
 		vertices[index++] = x * xzScale;
-		vertices[index++] = (texHeight/255.0f)* hScale;
+		vertices[index++] = (texHeight / 255.0f) * hScale;
 		vertices[index++] = z * xzScale;
 
-		
+
 		// TODO: set normal
 		vertices[index++] = 0;
 		vertices[index++] = 1;
 		vertices[index++] = 0;
 
 		// TODO: set uv
-		vertices[index++] = x/(float)width;
-		vertices[index++] = z/(float)height;
+		vertices[index++] = x / (float)width;
+		vertices[index++] = z / (float)height;
 
 	}
 
@@ -766,8 +761,8 @@ unsigned int GeneratePlane(const char* heightmap, unsigned char* &data , GLenum 
 
 	index = 0;
 	for (int i = 0; i < (width - 1) * (height - 1); i++) {
-		int x = i % width-1;
-		int z = i / width-1;
+		int x = i % width - 1;
+		int z = i / width - 1;
 
 		//get correct vertex position from data
 		int vertex = z * width + x;
@@ -814,5 +809,58 @@ unsigned int GeneratePlane(const char* heightmap, unsigned char* &data , GLenum 
 
 	//stbi_image_free(data);
 
+	return VAO;
+}
+unsigned int createPlane(GLuint& VAO, GLuint& VBO, GLuint& EBO, int& size, int& numIndices)
+{
+	// Define vertices for a plane (two triangles)
+	float vertices[] = {
+		// Positions        // Colors          // Texture coordinates
+		-0.5f,  0.0f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // Top-left
+		 0.5f,  0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // Top-right
+		-0.5f,  0.0f, -0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f, // Bottom-left
+		 0.5f,  0.0f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f, 1.0f  // Bottom-right
+	};
+
+	// Define indices for two triangles
+	unsigned int indices[] = {
+		0, 1, 2, // First triangle
+		1, 3, 2  // Second triangle
+	};
+
+	// Calculate the sizes
+	size = sizeof(vertices);
+	numIndices = sizeof(indices) / sizeof(indices[0]);
+
+	// Generate buffers and arrays
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	// Bind the VAO
+	glBindVertexArray(VAO);
+
+	// Bind and fill the vertex buffer
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+
+	// Bind and fill the element buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Set vertex attribute pointers
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // Position attribute
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Color attribute
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texture coordinate attribute
+	glEnableVertexAttribArray(2);
+
+	// Unbind the VAO
+	glBindVertexArray(0);
+
+	// Return the VAO
 	return VAO;
 }

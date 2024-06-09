@@ -101,6 +101,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +143,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <Optimization>Disabled</Optimization>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,16 +168,22 @@
     <ClCompile Include="MTLHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\Shaders\BasicFragment.shader" />
+    <None Include="resources\Shaders\BasicVertex.shader" />
+    <None Include="resources\Shaders\MandelBulbVertex.shader" />
+    <None Include="resources\Shaders\MandelBulpFragment.shader" />
     <None Include="resources\Shaders\model.fs" />
     <None Include="resources\Shaders\model.vs" />
+    <None Include="resources\Shaders\ShaderToyFragment.shader" />
+    <None Include="resources\Shaders\ShadertoyVertex.shader" />
     <None Include="resources\Shaders\SimpleFragment.shader" />
     <None Include="resources\Shaders\SimpleVertex.shader" />
+    <None Include="resources\Shaders\skyFragment.shader" />
+    <None Include="resources\Shaders\skyVertex.shader" />
     <None Include="resources\Shaders\terrainFragment.shader" />
     <None Include="resources\Shaders\terrainVertex.shader" />
     <None Include="resources\Shaders\UfoFragment.shader" />
     <None Include="resources\Shaders\UfoVertex.shader" />
-    <None Include="Shaders\skyFragment.shader" />
-    <None Include="Shaders\skyVertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh.h" />
