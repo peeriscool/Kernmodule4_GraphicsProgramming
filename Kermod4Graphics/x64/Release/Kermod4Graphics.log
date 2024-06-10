@@ -1,7 +1,7 @@
 ﻿  Main.cpp
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(503,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
-C:\OpenGlProject\Kermod4Graphics\Main.cpp(587,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-GeoClass.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(466,14): warning C4244: 'initializing': conversion from 'std::streamoff' to 'int', possible loss of data
+C:\OpenGlProject\Kermod4Graphics\Main.cpp(550,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+glad.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
   Kermod4Graphics.vcxproj -> C:\OpenGlProject\Kermod4Graphics\x64\Release\Kermod4Graphics.exe
   'pwsh.exe' is not recognized as an internal or external command,
@@ -14,21 +14,15 @@ GeoClass.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' sp
   C:\OpenGlProject\Kermod4Graphics\\resources\models\backpack\roughness.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\models\backpack\source_attribution.txt
   C:\OpenGlProject\Kermod4Graphics\\resources\models\backpack\specular.jpg
-  C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Details.mtl
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Details.obj
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\FullUfo.mtl
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\FullUfo.obj
-  C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\icosphere.mtl
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\icosphere.obj
-  C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Legs.mtl
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Legs.obj
-  C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Torus.mtl
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Torus.obj
-  C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Ufo.mtl
   C:\OpenGlProject\Kermod4Graphics\\resources\models\Ufo\Ufo.obj
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\BasicFragment.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\BasicVertex.shader
-  C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\GeoClass.cpp
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\MandelBulbVertex.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\MandelBulpFragment.shader
   C:\OpenGlProject\Kermod4Graphics\\resources\Shaders\model.fs
@@ -57,4 +51,4 @@ GeoClass.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' sp
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\day.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\night.jpg
   C:\OpenGlProject\Kermod4Graphics\\resources\textures\planets\space-cubemap.zip
-  51 File(s) copied
+  45 File(s) copied

@@ -1,9 +1,7 @@
 #include <iostream>
 #include <fstream>
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -14,29 +12,35 @@
 
 //#include "GeoClass.h"
 #include "MTLHelper.h"
+
 //int main();
+
 //forward declaration
 void processInput(GLFWwindow* window);
+int init(GLFWwindow*& window);
+
 void createShaders();
 void createGeometry(GLuint &VAO,GLuint& EBO, int& size, int& numIndices);
 void createProgram(GLuint& program, const char* vertex, const char* fragment);
+
+//render functions
 void renderSkybox();
 void renderTerrain();
 void renderModel(Model* model, GLuint program, glm::vec3 pos,glm::vec3 rot, glm::vec3 scale);
 void renderModel(Model* model, GLuint program);
 void RenderUfo(Model* model, GLuint program, float r, float g, float b, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);
-int init(GLFWwindow*& window);
 unsigned int GeneratePlane(const char* heightmap, unsigned char*& data, GLenum format, int comp, float hScale, float xzScale, unsigned int& indexCount, unsigned int& heightmapID);
-//unsigned int GeneratePlane(const char* heightmap, unsigned char*& data, GLenum format, int comp, float hScale, float xzScale, unsigned int& indexCount, unsigned int& heightmapID);
-unsigned int createPlane(GLuint& VAO, GLuint& VBO, GLuint& EBO, int& size, int& numIndices);
+
 //callbakcs
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void Key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 bool keys[1024];
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 //Util
 void LoadFile(const char* filename, char*& output);
 GLuint loadTexture(const char* path, int comp = 0);
+int WIDTH = 1280, HEIGHT = 720;
 
 //program IDs
 GLuint simpleProgram, SkyProgram, terrainProgram,modelProgram, UfoProgram;
@@ -46,34 +50,35 @@ GLuint GeometryVAO, GeometryEBO;
 GLuint terrainVAO, terrainIndeCount, heightmapID,heightNormalID;
 unsigned char* heigthMapTexture;
 
-//values
+//terrain values
 int geoSize, geoIndexCount;
 GLuint dirt, sand, grass, rock, snow;
-Model* backpack;
-//ufo 
-Model* Icosphere,* Torus,* legs,* detail;
-//, torus, leg, leg2, leg3, detail;
-const float cameraSpeed = 0.05f;
-const int WIDTH = 1280, HEIGHT = 720;
 
-//vec3
+//models
+Model* backpack;
+Model* Icosphere,* Torus,* legs,* detail; //ufo
+
+//glm vec3/ vec4/ mat4 
 glm::vec3 lightDirection = glm::normalize(glm::vec3(-0.5f, -0.5f, -0.5f));
 glm::vec3 cameraPosition = glm::vec3(0, 1250.5f, 5.0f);
 glm::mat4 projection, view;
+
 float lastX, lastY;
 bool FirstMouse = true;
 float camYaw, camPitch;
 
-//cam
+//camera
 glm::quat camQuat = glm::quat(glm::vec3(glm::radians(camPitch), glm::radians(camYaw), 0));
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float FOV = 35.0f;
+
 //mtl
 std::vector<Material> UfoMaterials;
+
 int main()
 {
-	std::cout << "Starting App" << std::endl;
+	std::cout << "Starting Application" << std::endl;
 	GLFWwindow* window;
 	int res = init(window);
 	if (res != 0) return res;
@@ -83,7 +88,6 @@ int main()
 	createShaders();
 	createGeometry(GeometryVAO, GeometryEBO, geoSize, geoIndexCount);
 
-	//GeoClass::createSphereGeometry(sphereVAO, SPhereEBO, tempSize, tempNumIndices);
 	terrainVAO = GeneratePlane("resources/textures/Heightmap2.png", heigthMapTexture,GL_RGBA,4,100.0f,5.0f,terrainIndeCount, heightmapID);
 	heightNormalID = loadTexture("resources/textures/heightnormal.png");
 	GLuint boxTex = loadTexture("resources/textures/container2.png");
@@ -104,7 +108,8 @@ int main()
 	detail = new Model("resources/models/Ufo/Details.obj");
 
 	UfoMaterials = loadMTL("resources/models/Ufo/FullUfo.mtl");
-	/*
+	
+	// reading the values of the mtl 
 	for (const auto& material : UfoMaterials)
 	{
 		std::cout << "Material: " << material.name << std::endl;
@@ -117,9 +122,16 @@ int main()
 		std::cout << "  d: " << material.d << std::endl;
 		std::cout << "  illum: " << material.illum << std::endl;
 	}
-	*/
+	// Print OpenGL information
+	const GLubyte* renderer = glGetString(GL_RENDERER); // Get renderer string
+	const GLubyte* version = glGetString(GL_VERSION);   // Get version string (OpenGL version)
+	std::cout << "Renderer: " << renderer << std::endl;
+	std::cout << "OpenGL version supported: " << version << std::endl;
+
 	//Create viewport
 	glViewport(0, 0, WIDTH, HEIGHT);
+	// Set the framebuffer size callback
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//game render loop
 	while(!glfwWindowShouldClose(window))
@@ -127,7 +139,6 @@ int main()
 		//input
 		processInput(window);
 		//rendering
-		//glClearColor(0.5f, 0.7f, 0.3f, 1.0f); //set background
 		glClearColor(0, 0, 0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -135,16 +146,12 @@ int main()
 		projection = glm::perspective(glm::radians(FOV), WIDTH / (float)HEIGHT, 0.1f, 6000.0f);
 		
 		renderSkybox();
-		glUseProgram(terrainProgram);
-
-		renderTerrain();
-	//	float t = glfwGetTime();
+	//	renderTerrain();
 	//	renderModel(backpack,modelProgram,glm::vec3(1000,100,1000), glm::vec3(0, t, 0), glm::vec3(100, 100, 100));
 		RenderUfo(Icosphere, UfoProgram, UfoMaterials[1].Kd[0], UfoMaterials[1].Kd[1], UfoMaterials[1].Kd[2], glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); // blueishx
 		RenderUfo(detail, UfoProgram, UfoMaterials[2].Kd[0] * 10, UfoMaterials[2].Kd[1] * 10, UfoMaterials[2].Kd[2] * 10, glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //black
 		RenderUfo(Torus, UfoProgram, UfoMaterials[3].Kd[0], UfoMaterials[3].Kd[1], UfoMaterials[3].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //green
 		RenderUfo(legs, UfoProgram, UfoMaterials[0].Kd[0], UfoMaterials[0].Kd[1], UfoMaterials[0].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //grey
-		//renderModel(Torus, simpleProgram, glm::vec3(1500, 150, 1500), glm::vec3(t, t, t), glm::vec3(600, 600, 600));
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, boxTex); //id gets matched with channel of texture using shader program
@@ -225,23 +232,6 @@ void processInput(GLFWwindow* window)
 			glm::vec3 camUp = camQuat * glm::vec3(0, 1, 0);
 			view = glm::lookAt(cameraPosition, cameraPosition + camForward, camUp);
 		}
-		/*if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		{
-			cameraPosition -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		{
-			cameraPosition += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-		}
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		{
-			cameraPosition += cameraSpeed * cameraFront;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		{
-			cameraPosition -= cameraSpeed * cameraFront;
-		}*/
-	
 }
 int init(GLFWwindow* &window)
 {
@@ -271,6 +261,14 @@ int init(GLFWwindow* &window)
 		return -2;
 	}
 	return 0;
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+	// Update the width and height
+	WIDTH = width;
+	HEIGHT = height;
+
+	// Adjust the viewport
+	glViewport(0, 0, width, height);
 }
 void createGeometry(GLuint &VAO, GLuint &EBO, int &size, int& numIndices) //creates plane
 {
