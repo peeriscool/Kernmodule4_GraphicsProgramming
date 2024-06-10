@@ -60,7 +60,7 @@ Model* Icosphere,* Torus,* legs,* detail; //ufo
 
 //glm vec3/ vec4/ mat4 
 glm::vec3 lightDirection = glm::normalize(glm::vec3(-0.5f, -0.5f, -0.5f));
-glm::vec3 cameraPosition = glm::vec3(0, 1250.5f, 5.0f);
+glm::vec3 cameraPosition = glm::vec3(0, 250.5f, 5.0f);
 glm::mat4 projection, view;
 
 float lastX, lastY;
@@ -71,7 +71,7 @@ float camYaw, camPitch;
 glm::quat camQuat = glm::quat(glm::vec3(glm::radians(camPitch), glm::radians(camYaw), 0));
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-float FOV = 35.0f;
+float FOV = 75.0f;
 
 //mtl
 std::vector<Material> UfoMaterials;
@@ -152,6 +152,7 @@ int main()
 		RenderUfo(detail, UfoProgram, UfoMaterials[2].Kd[0] * 10, UfoMaterials[2].Kd[1] * 10, UfoMaterials[2].Kd[2] * 10, glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //black
 		RenderUfo(Torus, UfoProgram, UfoMaterials[3].Kd[0], UfoMaterials[3].Kd[1], UfoMaterials[3].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //green
 		RenderUfo(legs, UfoProgram, UfoMaterials[0].Kd[0], UfoMaterials[0].Kd[1], UfoMaterials[0].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //grey
+		glUniform1f(glGetUniformLocation(UfoProgram, "time"), (float)glfwGetTime()); //update hover
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, boxTex); //id gets matched with channel of texture using shader program
@@ -375,7 +376,9 @@ void createShaders()
 	//glUseProgram(simpleProgram);
 	//glUniform1i(glGetUniformLocation(simpleProgram, "diffuseTex"), 0);
 	//glUniform1i(glGetUniformLocation(simpleProgram, "normalTex"), 1);
-	createProgram(SkyProgram,"resources/Shaders/skyVertex.shader","resources/Shaders/skyFragment.shader");
+	
+	//createProgram(SkyProgram,"resources/Shaders/skyVertex.shader","resources/Shaders/skyFragment.shader");
+	createProgram(SkyProgram, "resources/Shaders/Alternative_skyVertex.shader", "resources/Shaders/Alternative_skyFragment.shader");
 
 	createProgram(terrainProgram, "resources/Shaders/terrainVertex.shader", "resources/Shaders/terrainFragment.shader");
 
@@ -401,7 +404,8 @@ void createShaders()
 	glUseProgram(UfoProgram);
 	glUniform1i(glGetUniformLocation(UfoProgram, "Vcolor"), 1);
 
-
+	//glm::mat4 modelViewProjectionMatrix;
+	//glUniformMatrix4fv(glGetUniformLocation(UfoProgram, "modelViewProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(modelViewProjectionMatrix));
 
 }
 void createProgram(GLuint& programID, const char* vertex, const char* fragment)
@@ -523,6 +527,10 @@ void renderSkybox()
 	glUniform3fv(glGetUniformLocation(SkyProgram, "lightDirection"), GL_FALSE, glm::value_ptr(lightDirection));
 	//issue with using glunif3fv function
 	glUniform3f(glGetUniformLocation(SkyProgram, "cameraPosition"), cameraPosition.x, cameraPosition.y, cameraPosition.z);
+
+	float horizonLevel = 1.5f; // Adjust this value to move the horizon for the alternative shader
+	GLint horizonLevelLoc = glGetUniformLocation(SkyProgram, "horizonLevel");
+	glUniform1f(horizonLevelLoc, horizonLevel);
 
 	//rendering
 	glBindVertexArray(GeometryVAO);

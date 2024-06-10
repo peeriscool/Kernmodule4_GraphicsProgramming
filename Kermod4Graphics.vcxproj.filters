@@ -77,6 +77,12 @@
     <None Include="resources\Shaders\BasicVertex.shader">
       <Filter>Resource Files\shaders</Filter>
     </None>
+    <None Include="resources\Shaders\Alternative_skyFragment.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="resources\Shaders\Alternative_skyVertex.shader">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
