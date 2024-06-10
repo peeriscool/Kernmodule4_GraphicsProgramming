@@ -28,7 +28,7 @@ void renderSkybox();
 void renderTerrain();
 void renderModel(Model* model, GLuint program, glm::vec3 pos,glm::vec3 rot, glm::vec3 scale);
 void renderModel(Model* model, GLuint program);
-void RenderUfo(Model* model, GLuint program, float r, float g, float b, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);
+void RenderUfo(Model* model, GLuint program, int materialindex, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);
 unsigned int GeneratePlane(const char* heightmap, unsigned char*& data, GLenum format, int comp, float hScale, float xzScale, unsigned int& indexCount, unsigned int& heightmapID);
 
 //callbakcs
@@ -141,19 +141,23 @@ int main()
 		//rendering
 		glClearColor(0, 0, 0, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
+		float t = glfwGetTime();
+		lightDirection = glm::normalize(glm::vec3(glm::sin(t), -0.5f, glm::cos(t)));
 		//update control values
 		projection = glm::perspective(glm::radians(FOV), WIDTH / (float)HEIGHT, 0.1f, 6000.0f);
 		
 		renderSkybox();
 	//	renderTerrain();
 	//	renderModel(backpack,modelProgram,glm::vec3(1000,100,1000), glm::vec3(0, t, 0), glm::vec3(100, 100, 100));
-		RenderUfo(Icosphere, UfoProgram, UfoMaterials[1].Kd[0], UfoMaterials[1].Kd[1], UfoMaterials[1].Kd[2], glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); // blueishx
-		RenderUfo(detail, UfoProgram, UfoMaterials[2].Kd[0] * 10, UfoMaterials[2].Kd[1] * 10, UfoMaterials[2].Kd[2] * 10, glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //black
-		RenderUfo(Torus, UfoProgram, UfoMaterials[3].Kd[0], UfoMaterials[3].Kd[1], UfoMaterials[3].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //green
-		RenderUfo(legs, UfoProgram, UfoMaterials[0].Kd[0], UfoMaterials[0].Kd[1], UfoMaterials[0].Kd[2],glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //grey
+		RenderUfo(Icosphere, UfoProgram, 1 ,glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); // blueishx
+		RenderUfo(detail, UfoProgram, 0, glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //black
+		RenderUfo(Torus, UfoProgram, 3,glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //green
+		RenderUfo(legs, UfoProgram, 2,glm::vec3(10, 100, 10), glm::vec3(0, 0, 0), glm::vec3(100, 100, 100)); //grey
 		glUniform1f(glGetUniformLocation(UfoProgram, "time"), (float)glfwGetTime()); //update hover
 
+		glUniform3f(glGetUniformLocation(UfoProgram, "lightDirection"), lightDirection.x, lightDirection.y, lightDirection.z);
+		glUniform3f(glGetUniformLocation(UfoProgram, "viewDirection"), cameraPosition.x, cameraPosition.y, cameraPosition.z);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, boxTex); //id gets matched with channel of texture using shader program
 		 
@@ -402,7 +406,7 @@ void createShaders()
 
 	createProgram(UfoProgram,"resources/Shaders/UfoVertex.shader", "resources/Shaders/UfoFragment.shader");
 	glUseProgram(UfoProgram);
-	glUniform1i(glGetUniformLocation(UfoProgram, "Vcolor"), 1);
+	//glUniform1i(glGetUniformLocation(UfoProgram, "Vcolor"), 1);
 
 	//glm::mat4 modelViewProjectionMatrix;
 	//glUniformMatrix4fv(glGetUniformLocation(UfoProgram, "modelViewProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(modelViewProjectionMatrix));
@@ -555,8 +559,8 @@ void renderTerrain()
 	glUniformMatrix4fv(glGetUniformLocation(terrainProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(glGetUniformLocation(terrainProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-	float t = glfwGetTime();
-	lightDirection = glm::normalize( glm::vec3(glm::sin(t), -0.5f, glm::cos(t)));
+	/*float t = glfwGetTime();
+	lightDirection = glm::normalize( glm::vec3(glm::sin(t), -0.5f, glm::cos(t)));*/
 	glUniform3f(glGetUniformLocation(terrainProgram, "lightDirection"), lightDirection.x, lightDirection.y, lightDirection.z);
 	glUniform3f(glGetUniformLocation(terrainProgram, "cameraPosition"), cameraPosition.x, cameraPosition.y, cameraPosition.z);
 	
@@ -608,7 +612,7 @@ void renderModel(Model* model, GLuint program)
 	model->Draw(program);
 
 }
-void RenderUfo(Model* model, GLuint program,float r,float g,float b ,glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+void RenderUfo(Model* model, GLuint program,int materialindex,glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 {
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH);
@@ -617,6 +621,8 @@ void RenderUfo(Model* model, GLuint program,float r,float g,float b ,glm::vec3 p
 	glCullFace(GL_BACK);
 
 	glUseProgram(program);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glm::mat4 world = glm::mat4(1.0f);
 	world = glm::translate(world, pos);
@@ -629,9 +635,32 @@ void RenderUfo(Model* model, GLuint program,float r,float g,float b ,glm::vec3 p
 	glUniform3f(glGetUniformLocation(program, "lightDirection"), lightDirection.x, lightDirection.y, lightDirection.z);
 	glUniform3f(glGetUniformLocation(program, "cameraPosition"), cameraPosition.x, cameraPosition.y, cameraPosition.z);
 
-	glUniform3f(glGetUniformLocation(UfoProgram, "Kd"), r, g, b); // blueish
+	
+		GLint NsLocation = glGetUniformLocation(UfoProgram, "Ns");
+		GLint KaLocation = glGetUniformLocation(UfoProgram, "Ka");
+		GLint KdLocation = glGetUniformLocation(UfoProgram, "Kd");
+		GLint KsLocation = glGetUniformLocation(UfoProgram, "Ks");
+		GLint KeLocation = glGetUniformLocation(UfoProgram, "Ke");
+		GLint NiLocation = glGetUniformLocation(UfoProgram, "Ni");
+		GLint dLocation = glGetUniformLocation(UfoProgram, "d");
+		GLint illumLocation = glGetUniformLocation(UfoProgram, "illum");
 
+		float matKa[3] = { UfoMaterials[materialindex].Ka[0], UfoMaterials[materialindex].Ka[1], UfoMaterials[materialindex].Ka[2]};
+		float matKd[3] = { UfoMaterials[materialindex].Kd[0], UfoMaterials[materialindex].Kd[1], UfoMaterials[materialindex].Kd[2] };
+		float matKs[3] = { UfoMaterials[materialindex].Ks[0], UfoMaterials[materialindex].Ks[1], UfoMaterials[materialindex].Ks[2] };
+		float matKe[3] = { UfoMaterials[materialindex].Ke[0], UfoMaterials[materialindex].Ke[1], UfoMaterials[materialindex].Ke[2] };
 
+		//glUseProgram(UfoProgram);
+		glUniform1f(NsLocation, UfoMaterials[materialindex].Ns);
+		glUniform3fv(KaLocation, 1, matKa);
+		glUniform3fv(KdLocation, 1, matKd);
+		glUniform3fv(KsLocation, 1, matKs);
+		glUniform3fv(KeLocation, 1, matKe);
+		glUniform1f(NiLocation, UfoMaterials[materialindex].Ni);
+		glUniform1f(dLocation, UfoMaterials[materialindex].d);
+		glUniform1i(illumLocation, UfoMaterials[materialindex].illum);
+	
+	
 	model->Draw(program);
 
 	glDisable(GL_BLEND);

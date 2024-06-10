@@ -12,9 +12,8 @@ vec3 lerp(vec3 a, vec3 b , float t)
 }
 void main()
 {
-
-	vec3 topColor = vec3(135.0/255.0, 126.0/255.0, 235.0/255.0); // Light blue
-    vec3 midColor = vec3(0.0/255.0, 0.0/255.0, 139.0/255.0);      // Dark blue
+    vec3 topColor = vec3(0.0/255.0, 0.0/255.0, 139.0/255.0);
+	vec3 midColor = vec3(135.0/255.0, 126.0/255.0, 235.0/255.0); 
 	vec3 botColor = min(vec3(0.0), midColor - 0.1); 
 	vec3 viewDir = normalize(worldPosition.rgb - cameraPosition);
 	// Calculate the mix factor based on view direction
@@ -28,20 +27,20 @@ void main()
 	// Add stars
     // Randomly generate stars based on world position
    float starDensity = 0.005; // Adjust as needed
-	float starThreshold = 0.499; // Adjust as needed
-	float starNoise = fract(sin(dot(worldPosition.xyz, vec3(0.20023107, 0.19970112, 0.666))) * 69420);
+	float starThreshold = 0.099; // Adjust as needed
+	float starNoise = fract(sin(dot(worldPosition.xyz, vec3(0.20023107, 0.19970112, 0.666))) * 69420.007);
  if (starNoise < starDensity && t > starThreshold)
     {
         // Vary star intensity based on distance
-        float starDistance = length(worldPosition.xyz - cameraPosition);
-        float starIntensity = 1.0 / pow(starDistance, 0.5); // Adjust power for desired effect
+        float starDistance = length(worldPosition.xyz - vec3(0,0,0));
+        float starIntensity = 4.0 / pow(starDistance, 0.4); // Adjust power for desired effect
         // Add white color for stars with faded intensity
         Stars += vec3(1.0) * starIntensity;
     }
 
 	float sunIntensity = pow(max(dot(viewDir, lightDirection), 0.0) , 64.0);
 	
-	vec3 finalColor = lerp (skyColor,Stars,t) + sunIntensity * sunColor;
+	vec3 finalColor = lerp (skyColor * 1.5,Stars,t) + sunIntensity * sunColor;
 	//vec3 finalColor =skyColor;
     FragColor = vec4(finalColor, 1.0);
 	
